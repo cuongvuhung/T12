@@ -10,8 +10,8 @@ namespace T12
     {
         public string conStr;
         public Config()
-        {
-            FileStream fileStream = new(@"config.cfg", FileMode.OpenOrCreate);
+        {            
+            FileStream fileStream = new("config.cfg", FileMode.OpenOrCreate);
             StreamReader streamReader = new(fileStream);
             string dataSource = streamReader.ReadLine() + "";
             string catalog = streamReader.ReadLine() + "";

@@ -21,15 +21,15 @@ namespace T12
             this.Password = "";
             this.Role = Role.Unavailable;
         }
-        public User(int Id, string UserName, string FullName, string Password,Role Role) 
-        { 
+        public User(int Id, string UserName, string FullName, string Password, Role Role)
+        {
             this.Id = Id;
             this.UserName = UserName;
             this.FullName = FullName;
             this.Password = Password;
             this.Role = Role;
         }
-        public override string ToString() 
+        public override string ToString()
         {
             return Id + "," + UserName + "," + FullName + "," + Password + "," + Role;
         }

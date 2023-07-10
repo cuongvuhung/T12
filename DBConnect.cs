@@ -9,12 +9,21 @@ namespace T12
 {
     internal class DBConnect
     {
-        private Config config = new Config();
-        public SqlConnection Cnn;
+        private Config config = new();
+        public SqlConnection Cnn = new();
         public DBConnect()
         {
-            Cnn = new SqlConnection(config.conStr);
-            Cnn.Open();
+            try 
+            { 
+                Cnn = new SqlConnection(config.conStr);
+                Cnn.Open();
+            } 
+            catch 
+            {
+                Console.WriteLine("CANNOT CONNECT DATABASE!");
+                Console.ReadKey();
+            }
+            
         }        
     }
 }

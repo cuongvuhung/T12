@@ -8,11 +8,11 @@ namespace T12
 {
     internal class ScreenService
     {
-        private User userLogin;
-        private UserServices userServices = new UserServices();
-        private DeviceServices deviceServices = new DeviceServices();
+        private User userLogin = new();
+        private UserServices userServices = new ();
+        private DeviceServices deviceServices = new ();
 
-        public void Header()
+        public static void Header()
         {
             Console.Clear();
             Console.WriteLine("---------------- DEVICE MANAGER ----------------");
@@ -24,9 +24,9 @@ namespace T12
             do 
             {
                 Header();
-                Console.Write("Username"); userLogin.UserName = Console.ReadLine() + "";
-                Console.Write("Password"); userLogin.Password = Console.ReadLine() + "";                
-                userLogin = userServices.checkUser(userLogin.UserName, userLogin.Password);
+                Console.Write("USERNAME:"); userLogin.UserName = Console.ReadLine() + "";
+                Console.Write("PASSWORD:"); userLogin.Password = Console.ReadLine() + "";                
+                userLogin = userServices.CheckUser(userLogin.UserName, userLogin.Password);
                 if (userLogin.Role != Role.Unavailable) 
                 {                     
                     MainScreen(); 
@@ -37,7 +37,7 @@ namespace T12
 
         public void MainScreen()
         {
-            string select = "";
+            string select;
             do
             {
                 Header();
@@ -45,7 +45,9 @@ namespace T12
                 Console.WriteLine("1.CHANGE PASSWORD");
                 Console.WriteLine("2.DEVICE MANAGER");
                 if (userLogin.Role == Role.Manager) Console.WriteLine("3.USER MANAGER");
-                Console.WriteLine("Select 0-3:");
+                Console.Write("Select 0-");
+                if (userLogin.Role == Role.Manager) Console.WriteLine("3:");
+                else Console.WriteLine("2:");
                 select = Console.ReadLine() + "";
                 switch (select)
                 {
@@ -70,7 +72,7 @@ namespace T12
         private void ChangePasswordScreen()
         {
             Header();
-            Console.WriteLine("Enter new password");
+            Console.WriteLine("ENTER NEW PASSWORD:");
             string newpassword  = Console.ReadLine() + "";
             userServices.ChangeUserPassword(userLogin.Id, newpassword);
         }
@@ -78,7 +80,7 @@ namespace T12
         public void UserManagerScreen()
         {
             userServices.GetData();
-            string select = "";
+            string select;
             do
             {
                 Header();
@@ -89,7 +91,7 @@ namespace T12
                 Console.WriteLine("4, UPDATE A USER");
                 Console.WriteLine("5, DELETE A USER");
                 Console.WriteLine("------------------------------------------------");
-                Console.WriteLine("Select 0-5:");
+                Console.WriteLine("SELECT 0-5:");
                 select = Console.ReadLine() +"";
                 switch (select)
                 {
@@ -113,17 +115,65 @@ namespace T12
                     default:
                         break;
                 }
-            } while (select == "0");
+            } while (select != "0");
             
+        }
+
+        private void DeleteUserScreen()
+        {
+            Header();
+            User user = new ();
+            Console.WriteLine("DELETE USER:");
+            Console.Write("ENTER ID:"); user.Id = Convert.ToInt16(Console.ReadLine());            
+            userServices.Delete(user);
+        }
+
+        private void UpdateUserScreen()
+        {
+            Header();
+            User user = new ();
+            Console.WriteLine("UPDATE INFO FOR USER:");
+            Console.Write("ENTER ID:"); user.Id = Convert.ToInt16(Console.ReadLine());
+            Console.WriteLine("SKIP FIELD BY JUST ENTER");
+            Console.Write("ENTER USER NAME:"); user.UserName = Console.ReadLine() + "";
+            Console.Write("ENTER FULL NAME:"); user.FullName = Console.ReadLine() + "";
+            Console.Write("ENTER PASSWORD:"); user.Password = Console.ReadLine() + "";
+            Console.Write("ENTER ROLE:"); user.Role = (Role)Convert.ToInt16(Console.ReadLine() + "");
+            userServices.Update(user);
+        }
+
+        private void AddNewUserScreen()
+        {
+            Header();
+            User user = new ();
+            Console.WriteLine("ADD NEW USER: ");
+            Console.Write("ENTER USER NAME:"); user.UserName = Console.ReadLine() + "";
+            Console.Write("ENTER FULL NAME:"); user.FullName = Console.ReadLine() + "";
+            Console.Write("ENTER PASSWORD:"); user.Password = Console.ReadLine() + "";
+            Console.Write("ENTER ROLE:"); user.Role = (Role) Convert.ToInt16(Console.ReadLine()+"");
+            userServices.Add(user);
+        }
+
+        private void SearchUserScreen()
+        {
+            Header();
+            Console.WriteLine("SEARCH ALL USER BY NAME: ");
+            Console.Write("ENTER NAME:");string key = Console.ReadLine() + "";
+
+            foreach(User user in userServices.SearchListByName(key)) 
+                {
+                Console.WriteLine(user.ToString());
+                }
+
         }
 
         private void ListUserScreen()
         {
             Header();
             Console.WriteLine("LIST OF USER SORT BY NAME:");
-            foreach (User item in userServices.sortedUserList()) 
+            foreach (User user in userServices.SortedUserList()) 
             {
-                Console.WriteLine(item.ToString());
+                Console.WriteLine(user.ToString());
             }
             Console.ReadLine();
         }
@@ -131,7 +181,7 @@ namespace T12
         public void DeviceManagerScreen()
         {
             deviceServices.GetData();
-            string select = "";
+            string select ;
             do
             {
                 Header();
@@ -141,7 +191,9 @@ namespace T12
                 Console.WriteLine("3, UPDATE A DEVICE");
                 if (userLogin.Role == Role.Manager) Console.WriteLine("4, DELETE A USER");
                 Console.WriteLine("------------------------------------------------");
-                Console.WriteLine("Select 0-4:");
+                Console.Write("SELECT 0-");
+                if (userLogin.Role == Role.Manager) Console.WriteLine("4:");
+                else Console.WriteLine("3:");
                 select = Console.ReadLine() + "";
                 switch (select)
                 {
@@ -162,8 +214,49 @@ namespace T12
                     default:
                         break;
                 }
-            } while (select == "0");
+            } while (select != "0");
 
+        }
+
+        private void DeleteDeviceScreen()
+        {
+            Header();
+            User item = new ();
+            Console.WriteLine("DELETE DEVICE:");
+            Console.Write("ENTER ID:"); item.Id = Convert.ToInt16(Console.ReadLine());
+            userServices.Delete(item);
+        }
+
+        private void UpdateDeviceScreen()
+        {
+            Header();
+            Device item = new ();
+            Console.WriteLine("UPDATE INFO FOR USER:");
+            Console.Write("ENTER ID:"); item.Id = Convert.ToInt16(Console.ReadLine());
+            Console.WriteLine("SKIP FIELD BY JUST ENTER");
+            Console.Write("ENTER USER NAME:"); item.Name = Console.ReadLine() + "";
+            Console.Write("ENTER QUANTITY:"); item.Quantity = Convert.ToInt16(Console.ReadLine() + "");
+            deviceServices.Update(item);
+        }
+        private void AddNewDeviceScreen()
+        {
+            Header();
+            Device item = new ();
+            Console.WriteLine("ADD DEVICE USER: ");
+            Console.Write("ENTER DEVICE NAME:"); item.Name = Console.ReadLine() + "";
+            Console.Write("ENTER QUANTITY:"); item.Quantity = Convert.ToInt16(Console.ReadLine() + "");
+            deviceServices.AddNew(item);
+        }
+
+        private void ListDeviceScreen()
+        {
+            Header();
+            Console.WriteLine("LIST OF DEVICE SORT BY NAME:");
+            foreach (Device user in deviceServices.SortedDeviceList())
+            {
+                Console.WriteLine(user.ToString());
+            }
+            Console.ReadLine();
         }
     }
 }

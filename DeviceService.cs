@@ -4,29 +4,31 @@ namespace T12
 {
     internal class DeviceServices
     {
-        private List<Device> devices = new List<Device>();        
+        private List<Device> devices = new ();        
 
         public void GetData()
         {
-            DLA dla = new DLA();
+            DLA dla = new ();
             string str = "Select,DEVICES";
-            List<SqlDataReader> data = dla.SQLQuery(str);
+            List<string> rows = dla.SQLQuery(str);
 
-            foreach (SqlDataReader dr in data)
+            foreach (string row in rows)
             {
-                Device item = new();
-                item.Id = (int)dr["Id"];
-                item.Name = (string)dr["Name"];
-                item.Quantity = (int)dr["Quantity"];                
+                Device item = new()
+                {
+                    Id = Convert.ToInt16(row.Split(",")[0]),
+                    Name = (string)row.Split(",")[1],
+                    Quantity = Convert.ToInt16(row.Split(",")[2])
+                };
                 devices.Add(item);
             }
         }
-        public int Add(Device device)
+        public int AddNew(Device device)
         {
             string str = "Insert,DEVICES,";
             str += device.Name + ',';
             str += device.Quantity + ',';
-            DLA dla = new DLA();
+            DLA dla = new ();
             return dla.SQLExecute(str);
         }
         public int Update(Device device)
@@ -35,7 +37,7 @@ namespace T12
             str += device.Id + ",";
             if (device.Name != "") { str += "name," + device.Name + ','; }
             if (device.Quantity != 0) { str += "quantity," + device.Quantity; }
-            DLA dla = new DLA();
+            DLA dla = new ();
             return dla.SQLExecute(str);
         }
         public int Delete(Device device)
@@ -44,28 +46,32 @@ namespace T12
             str += device.Id + ",";
             if (device.Name != "") { str += "username," + device.Name + ','; }
             if (device.Quantity != 0) { str += "quantity," + device.Quantity; }
-            DLA dla = new DLA();
+            DLA dla = new ();
             return dla.SQLExecute(str);
         }
-        public List<Device> list()
-        {
-            return list().OrderByDescending(x => x.Name).ToList();
-        }
-        public List<Device> searchList(string name)
+        
+        public List<Device> SearchDeviceList(string name)
         {
             string str = "Select,DEVICES,Username," + name;
-            DLA dla = new DLA();
-            List<Device> result = new List<Device>();
-            List<SqlDataReader> data = dla.SQLQuery(str);
-            foreach (SqlDataReader dr in data)
+            DLA dla = new ();
+            List<Device> result = new ();
+            List<string> rows = dla.SQLQuery(str);
+            foreach (string row in rows)
             {
-                Device item = new();
-                item.Id = (int)dr["Id"];
-                item.Name = (string)dr["Name"];
-                item.Quantity = (int)dr["Quantity"];
+                Device item = new()
+                {
+                    Id = Convert.ToInt16(row.Split(",")[0]),
+                    Name = (string)row.Split(",")[1],
+                    Quantity = Convert.ToInt16(row.Split(",")[2])
+                };
                 result.Add(item);
             }
             return result;
+        }
+
+        public List<Device> SortedDeviceList()
+        {
+            return devices.OrderByDescending(x => x.Id).ToList();
         }
     }
 }

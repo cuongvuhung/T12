@@ -26,122 +26,146 @@ namespace T12
         private DBConnect dbconnect = new();
         public int SQLExecute(string str)
         {
-            // get sql template
-            string sql;
-            SqlCommand cmd = dbconnect.Cnn.CreateCommand();
-// INSERT            
-            if (str.Split()[0] == "Insert")
+            try
             {
-                // sql = Insert into tablename values 
-                sql = $"Insert into {str.Split()[1]} values (";
-                for (int i = 2; i < str.Count() - 1; i++)
+                // get sql template
+                string sql;
+                SqlCommand cmd = dbconnect.Cnn.CreateCommand();
+                // INSERT            
+                if (str.Split(",")[0] == "Insert")
                 {
-                    // (@0,@1,....
-                    sql += "@" + i + ",";                   
-                }
+                    // sql = Insert into tablename values 
+                    sql = $"Insert into {str.Split(",")[1]} values (";
+                    for (int i = 2; i < str.Split(",").Count() - 1; i++)
+                    {
+                        // (@0,@1,....
+                        sql += "@" + i + ",";
+                    } 
                     // @n)
-                sql += "@" + (str.Count() - 1) + ")";
-                
-                // Set parameter @2 = str.Split()[2]) .v.v.
-                cmd = new(sql, dbconnect.Cnn);
-                for (int i = 2; i < str.Count(); i++)
-                {
-                    cmd.Parameters.AddWithValue("" + i + "", str.Split()[i]);
-                }
-            }
+                    sql += "@" + (str.Split(",").Count() - 1) + ")";
 
-// UPDATE
-            if (str.Split()[0] == "Update")
+                    // Set parameter @2 = str.Split(",")[2]) .v.v.
+                    cmd = new(sql, dbconnect.Cnn);
+                    for (int i = 2; i < str.Split(",").Count(); i++)
+                    {
+                        cmd.Parameters.AddWithValue("" + i + "", str.Split(",")[i]);
+                    }
+                }
+
+                // UPDATE
+                if (str.Split(",")[0] == "Update")
+                {
+                    // sql = Update tablename set 
+                    sql = $"Update {str.Split(",")[1]} Set ";
+
+                    // field3 = @4, field5= @6,..... 
+                    for (int i = 3; i < str.Count() - 2; i++)
+                    {
+                        sql += str.Split(",")[i] + "=@" + (i + 1) + ",";
+                        i++;
+                    }
+                    // fieldn = @n where id =@id
+                    sql += (str.Split(",")[str.Split(",").Count() - 2]) + "=@" + (str.Split(",").Count() - 1);
+                    sql += " where id = @id";
+
+                    // @5 = str.ToArrayString()[5] ........ @id=str.ToArrayString()[2]
+                    cmd = new(sql, dbconnect.Cnn);
+                    for (int i = 3; i < str.Split(",").Count(); i++)
+                    {
+                        cmd.Parameters.AddWithValue("" + (i + 1) + "", str.Split(",")[i + 1]);
+                        i++;
+                    }
+                    cmd.Parameters.AddWithValue("id", str.Split(",")[2]);
+                }
+
+                // DELETE
+                if (str.Split(",")[0] == "Delete")
+                {
+                    // sql = Delete tablename where 
+                    sql = $"Delete from {str.Split(",")[1]} where ";
+                    // field2 = @3 and field4 = @5 ......
+                    for (int i = 2; i < str.Split(",").Count() - 2; i++)
+                    {
+                        sql += str.Split(",")[i] + "=@" + (i + 1) + "and";
+                        i++;
+                    }
+                    sql += (str.Split(",")[str.Split(",").Count() - 2]) + "=@" + (str.Split(",").Count() - 1);
+                    // @0=str.ToArrayString()[2],@2=str.ToArrayString()[4]
+                    //Console.WriteLine(sql);Console.ReadLine();
+                    cmd = new(sql, dbconnect.Cnn);
+                    for (int i = 2; i < str.Split(",").Count(); i++)
+                    {
+                        cmd.Parameters.AddWithValue("" + (i + 1) + "", str.Split(",")[i + 1]);
+                        i++;
+                    }
+                }
+                int result = cmd.ExecuteNonQuery();
+                //Console.Write("Execute successful!"); Console.ReadLine();
+                return result;
+            }
+            catch
             {
-                // sql = Update tablename set 
-                sql = $"Update {str.Split()[1]} Set ";
-
-                // field3 = @4, field5= @6,..... 
-                for (int i = 3; i < str.Count() - 2; i++)
-                {
-                    sql += str.Split()[i] + "=@" + (i + 1) + ",";
-                    i++;
-                }
-                // fieldn = @n where id =@id
-                sql += (str.Split()[str.Count() - 2]) + "=@" + (str.Count() - 1);
-                sql += " where id = @id";
-
-                // @5 = str.ToArrayString()[5] ........ @id=str.ToArrayString()[2]
-                cmd = new(sql, dbconnect.Cnn);
-                for (int i = 3; i < str.Count(); i++)
-                {
-                    cmd.Parameters.AddWithValue("" + (i + 1) + "", str.Split()[i + 1]);
-                    i++;
-                }
-                cmd.Parameters.AddWithValue("id", str.Split()[2]);
+                Console.WriteLine("CANNOT EXECUTE!");
+                Console.ReadKey();
+                return 0;
             }
-
-// DELETE
-            if (str.Split()[0] == "Delete")
-            {
-                // sql = Delete tablename where 
-                sql = $"Delete from {str.Split()[1]} where ";
-                // field2 = @3 and field4 = @5 ......
-                for (int i = 2; i < str.Count() - 2; i++)
-                {
-                    sql += str.Split()[i] + "=@" + (i + 1) + "and";
-                    i++;
-                }
-                sql += (str.Split()[str.Count() - 2]) + "=@" + (str.Count() - 1);
-                // @0=str.ToArrayString()[2],@2=str.ToArrayString()[4]
-                //Console.WriteLine(sql);Console.ReadLine();
-                cmd = new(sql, dbconnect.Cnn);
-                for (int i = 2; i < str.Count(); i++)
-                {
-                    cmd.Parameters.AddWithValue("" + (i + 1) + "", str.Split()[i + 1]);
-                    i++;
-                }
-            }
-            int result = cmd.ExecuteNonQuery();
-            //Console.Write("Execute successful!"); Console.ReadLine();
-            return result;
+            
         }
 
         // Excute SQL SELECT 
-        public List<SqlDataReader> SQLQuery(string str)
-        // ('Select', 'Table name', Condition Field1, Val1, Condition Field2, Val2,.....)        
+        public List<string> SQLQuery(string str)
         {
-// SELECT            
-            string sql;
-            SqlCommand cmd;
-            List<SqlDataReader> result = new();
+            // SELECT            
+            //try 
+            //{
+                string sql;
+                SqlCommand cmd;
+                List<string> result = new();
 
-            //sql= Select * from tablename where field1 = @3 and field2 = @5 and ......
-            sql = $"Select * from {str.Split()[1]}";
-            if (str.Count() > 3)
-            {
-                sql += " where ";
+                //sql= Select * from tablename where field1 = @3 and field2 = @5 and ......
+                sql = $"Select * from {str.Split(",")[1]}";
+                if (str.Split(",").Count() > 3)
+                {
+                    sql += " where ";
 
-                for (int i = 2; i < str.Count() - 2; i++)
-                {
-                    sql += str.Split()[i] + "=@" + (i + 1) + " and ";
-                    i++;
+                    for (int i = 2; i < str.Split(",").Count() - 2; i++)
+                    {
+                        sql += str.Split(",")[i] + "=@" + (i + 1) + " and ";
+                        i++;
+                    }
+                    sql += str.Split(",")[str.Split(",").Count() - 2] + "=@" + (str.Split(",").Count() - 1);
+
+                    //@3=str.ToArrayString()[3],@5=str.ToArrayString()[5]
+                    cmd = new(sql, dbconnect.Cnn);
+                    for (int i = 2; i < str.Split(",").Count(); i++)
+                    {
+                        cmd.Parameters.AddWithValue("" + (i + 1) + "", str.Split(",")[i + 1]);
+                        i++;
+                    }
                 }
-                sql += str.Split()[str.Count() - 2] + "=@" + (str.Count() - 1);
-                
-                //@3=str.ToArrayString()[3],@5=str.ToArrayString()[5]
-                cmd = new(sql, dbconnect.Cnn);
-                for (int i = 2; i < str.Count(); i++)
+                else
                 {
-                    cmd.Parameters.AddWithValue("" + (i + 1) + "", str.Split()[i + 1]);
-                    i++;
+                    cmd = new(sql, dbconnect.Cnn);
                 }
-            }
-            else
-            {
-                cmd = new(sql, dbconnect.Cnn);
-            }
-            SqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
-            {                                
-                result.Add(rdr);
-            }            
-            return result;
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    string line ="";
+                    foreach (object o in rdr) 
+                    { 
+                        line += o.ToString() + ",";
+                    }
+                    result.Add(line);
+                }
+                return result;
+            //}
+            //catch 
+            //{
+            //    Console.WriteLine("CANNOT QUERY!");
+            //    Console.ReadKey();
+            //    return new List<SqlDataReader>();
+            //}
+            
         }
 
     }

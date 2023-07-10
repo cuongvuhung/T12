@@ -10,39 +10,45 @@ namespace T12
 {
     internal class UserServices
     {
-        private List<User> users = new List<User>();
+        private List<User> users = new ();
         //public User UserLogin = new User();
 
         public void GetData()
         {
-            DLA dla = new DLA();
+            DLA dla = new ();
             string str = "Select,USERS";
-            List<SqlDataReader> data = dla.SQLQuery(str);
+            List<string> rows = dla.SQLQuery(str);
 
-            foreach (SqlDataReader dr in data)
+            foreach (string row in rows)
             {
-                User item = new();
-                item.Id = (int)dr["Id"];
-                item.UserName = (string)dr["username"];
-                item.FullName = (string)dr["fulname"];
-                item.Password = (string)dr["Password"];
-                item.Role = (Role)dr["role"];
+                User item = new()
+                {
+                    Id = Convert.ToInt16(row.Split(",")[0]),
+                    UserName = (string)row.Split(",")[1],
+                    FullName = (string)row.Split(",")[2],
+                    Password = (string)row.Split(",")[3],
+                    Role = (Role)Convert.ToInt16(row.Split(",")[4])
+                };
                 users.Add(item);
             }
         }
-        public User checkUser(string username, string password)
+        public User CheckUser(string username, string password)
         {
-            User item = new();
-            item.UserName = username;
-            item.Password = password;
-            string str = "Select,username," + username + ",password," + password;
-            DLA dla = new DLA();
-            List<SqlDataReader> data = dla.SQLQuery(str);
-            if (data.Count > 0) 
+            User item = new()
             {
-                item.Id = (int)data[0]["Id"];                
-                item.FullName = (string)data[0]["fulname"];                
-                item.Role = (Role)data[0]["role"];                
+                UserName = username,
+                Password = password
+            };
+            string str = "Select,USERS,username," + username + ",password," + password;
+            Console.WriteLine(str);
+            DLA dla = new();
+            List<string> rows = dla.SQLQuery(str);
+            foreach (string row in rows) 
+            {
+                Console.WriteLine(row);Console.ReadKey();                
+                item.Id = Convert.ToInt16(row.Split(",")[0]);                
+                item.FullName = (string)row.Split(",")[2];
+                item.Role = (Role)Convert.ToInt16(row.Split(",")[4]);
             }
             return item;
         }
@@ -53,7 +59,7 @@ namespace T12
             str += user.FullName + ',';
             str += user.Password + ',';
             str += Convert.ToInt16(user.Role);
-            DLA dla = new DLA();
+            DLA dla = new();
             return dla.SQLExecute(str);
         }
         public int Update(User user)
@@ -64,7 +70,7 @@ namespace T12
             if (user.FullName != "") { str += "fullname," + user.FullName + ','; }
             if (user.Password != "") { str += "password," + user.Password + ','; }
             if (user.Role != Role.Unavailable) { str += "Role," + (Convert.ToInt16(user.Role)); }
-            DLA dla = new DLA();
+            DLA dla = new();
             return dla.SQLExecute(str);
         }
         public int Delete(User user)
@@ -75,27 +81,29 @@ namespace T12
             if (user.FullName != "") { str += "fullname," + user.FullName + ','; }
             if (user.Password != "") { str += "password," + user.Password + ','; }
             if (user.Role != Role.Unavailable) { str += "Role," + (Convert.ToInt16(user.Role)); }
-            DLA dla = new DLA();
+            DLA dla = new();
             return dla.SQLExecute(str);
         }
-        public List<User> sortedUserList() 
+        public List<User> SortedUserList() 
         {
             return users.OrderByDescending(x => x.FullName).ToList();
         }
-        public List<User> searchList(string name) 
+        public List<User> SearchListByName(string name) 
         {
             string str = "Select,USERS,Username," + name;
-            DLA dla = new DLA();
-            List<User> result = new List<User>();
-            List<SqlDataReader> data = dla.SQLQuery(str);
-            foreach (SqlDataReader dr in data)
+            DLA dla = new();
+            List<User> result = new();
+            List<String> rows = dla.SQLQuery(str);
+            foreach (String row in rows)
             {
-                User item = new();
-                item.Id = (int)dr["Id"];
-                item.UserName = (string)dr["Username"];
-                item.FullName = (string)dr["Username"];
-                item.Password = (string)dr["Password"];
-                item.Role = (Role)dr["Role"];
+                User item = new()
+                {
+                    Id = Convert.ToInt16(row.Split(",")[0]),
+                    UserName = row.Split(",")[1],
+                    FullName = row.Split(",")[2],
+                    Password = row.Split(",")[3],
+                    Role = (Role)Convert.ToInt16(row.Split(",")[4])
+                };                
                 result.Add(item);
             }
             return result;
@@ -103,7 +111,7 @@ namespace T12
         public void ChangeUserPassword(int id,string newpwd)
         {            
             string str = "Update,USERS," + id + "," + newpwd;
-            DLA dla = new DLA();
+            DLA dla = new();
             dla.SQLExecute(str);
         }
     }
