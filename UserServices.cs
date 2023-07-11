@@ -34,7 +34,8 @@ namespace T12
         }
         public User CheckUser(string username, string password)
         {
-            User item = new()
+            password = Utils.Hash(password);            
+            User item = new()            
             {
                 UserName = username,
                 Password = password
@@ -54,6 +55,7 @@ namespace T12
         }
         public int AddNew(User user)
         {
+            user.Password = Utils.Hash(user.Password);
             string str = "Insert,USERS,";
             str += user.UserName + ',';
             str += user.FullName + ',';
@@ -64,6 +66,7 @@ namespace T12
         }
         public int Update(User user)
         {
+            user.Password = Utils.Hash(user.Password);
             string str = "Update,USERS,";
             str += user.Id + ","; 
             if (user.UserName != "") { str += "username," + user.UserName + ','; }
@@ -81,7 +84,7 @@ namespace T12
             return dla.SQLExecute(str);
         }
         public List<User> SortedUserList() 
-        {
+        {            
             return users.OrderByDescending(x => x.FullName).ToList();
         }
         public List<User> SearchListByName(string name) 

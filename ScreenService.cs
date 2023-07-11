@@ -29,8 +29,8 @@ namespace T12
     internal class ScreenService
     {
         private User userLogin = new();
-        private UserServices userServices = new ();
-        private DeviceServices deviceServices = new();
+        private UserServices userServices = new(); 
+        private DeviceServices deviceServices = new(); 
 
         public void Header()
         {
@@ -54,6 +54,10 @@ namespace T12
                 if (userLogin.Role != Role.Unavailable) 
                 {                     
                     MainScreen(); 
+                } 
+                else 
+                {
+                    Console.Write("Login fail!");Console.ReadKey();
                 }
             } while (userLogin.Role == Role.Unavailable);
             
@@ -96,7 +100,7 @@ namespace T12
                         break;
                 }
             } while (select != "1");
-            Console.Write("------------END-------------"); Console.ReadKey();
+            Console.Write("-------------------- LOG OUT -------------------"); Console.ReadKey();
         }
         // -- 2.CHANGE PASSWORD
         private void ChangePasswordScreen()
@@ -113,7 +117,8 @@ namespace T12
         {
             string select;
             do
-            {
+            {                
+                deviceServices = new DeviceServices();
                 deviceServices.GetData();
                 Header();
                 Console.WriteLine("---------------- DEVICE MANAGER ----------------");
@@ -199,6 +204,7 @@ namespace T12
             string select;
             do
             {
+                userServices = new UserServices();
                 userServices.GetData();
                 Header();
                 Console.WriteLine("----------------- USER MANAGER -----------------");

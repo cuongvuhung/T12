@@ -31,7 +31,7 @@ namespace T12
         }
         public override string ToString()
         {
-            return Id + "," + UserName + "," + FullName + "," + Password + "," + Role;
+            return Id + "," + UserName + "," + FullName + "," + Role ;
         }
     }
 }
