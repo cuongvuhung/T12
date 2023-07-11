@@ -16,8 +16,8 @@ namespace T12
         public User()
         {
             this.Id = 0;
-            this.UserName = "";
-            this.FullName = "";
+            this.UserName = "No username";
+            this.FullName = "No name";
             this.Password = "";
             this.Role = Role.Unavailable;
         }

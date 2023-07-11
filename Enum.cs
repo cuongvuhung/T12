@@ -8,6 +8,6 @@ namespace T12
 {
     internal enum Role
     {
-        Manager,User, Unavailable
+        Manager, User, Unavailable
     }
 }

@@ -4,21 +4,21 @@ namespace T12
 {
     internal class DeviceServices
     {
-        private List<Device> devices = new ();        
-
+        private List<Device> devices = new ();
         public void GetData()
         {
             DLA dla = new ();
             string str = "Select,DEVICES";
             List<string> rows = dla.SQLQuery(str);
+            devices.Clear ();
 
             foreach (string row in rows)
             {
                 Device item = new()
                 {
-                    Id = Convert.ToInt16(row.Split(",")[0]),
+                    Id = Convert.ToInt32(row.Split(",")[0]),
                     Name = (string)row.Split(",")[1],
-                    Quantity = Convert.ToInt16(row.Split(",")[2])
+                    Quantity = Convert.ToInt32(row.Split(",")[2])
                 };
                 devices.Add(item);
             }
@@ -27,7 +27,7 @@ namespace T12
         {
             string str = "Insert,DEVICES,";
             str += device.Name + ',';
-            str += device.Quantity + ',';
+            str += device.Quantity;
             DLA dla = new ();
             return dla.SQLExecute(str);
         }
@@ -48,8 +48,7 @@ namespace T12
             if (device.Quantity != 0) { str += "quantity," + device.Quantity; }
             DLA dla = new ();
             return dla.SQLExecute(str);
-        }
-        
+        }        
         public List<Device> SearchDeviceList(string name)
         {
             string str = "Select,DEVICES,Username," + name;
@@ -60,15 +59,14 @@ namespace T12
             {
                 Device item = new()
                 {
-                    Id = Convert.ToInt16(row.Split(",")[0]),
+                    Id = Convert.ToInt32(row.Split(",")[0]),
                     Name = (string)row.Split(",")[1],
-                    Quantity = Convert.ToInt16(row.Split(",")[2])
+                    Quantity = Convert.ToInt32(row.Split(",")[2])
                 };
                 result.Add(item);
             }
             return result;
         }
-
         public List<Device> SortedDeviceList()
         {
             return devices.OrderByDescending(x => x.Id).ToList();

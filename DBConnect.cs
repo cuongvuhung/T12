@@ -20,7 +20,7 @@ namespace T12
             } 
             catch 
             {
-                Console.WriteLine("CANNOT CONNECT DATABASE!");
+                Console.WriteLine("Cannot connect to database!");
                 Console.ReadKey();
             }
             
