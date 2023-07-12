@@ -24,8 +24,9 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace T12
 {
-    internal class DLA
+    internal class DAL
     {
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // Excute SQLExecute
         private DBConnect dbconnect = new();
         public int SQLExecute(string str)
@@ -34,6 +35,7 @@ namespace T12
             {
                 string sql;
                 SqlCommand cmd = dbconnect.Cnn.CreateCommand();
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
                 // INSERT            
                 if (str.Split(",")[0] == "Insert")
                 {
@@ -54,7 +56,7 @@ namespace T12
                         cmd.Parameters.AddWithValue("" + i + "", str.Split(",")[i]);
                     }
                 }
-
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
                 // UPDATE
                 if (str.Split(",")[0] == "Update")
                 {
@@ -81,7 +83,7 @@ namespace T12
                     }
                     cmd.Parameters.AddWithValue("id", str.Split(",")[2]);
                 }
-
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
                 // DELETE
                 if (str.Split(",")[0] == "Delete")
                 {
@@ -103,7 +105,7 @@ namespace T12
                     }
 
                 }
-                
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
                 int result = cmd.ExecuteNonQuery();
                 Console.Write("Execute successful! -- "+ result + " completed!"); Console.ReadLine();
                 return result;
@@ -115,17 +117,18 @@ namespace T12
             }
             
         }
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // Excute SQLQuery
         public List<string> SQLQuery(string str)
         {
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
             // SELECT            
-            try 
+            try
             {
                 string sql;
                 SqlCommand cmd;
                 List<string> result = new();
-
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
                 //sql= Select * from tablename 
                 sql = $"Select * from {str.Split(",")[1]}";
                 // + where field1 = @3 and field2 = @5 and ......
@@ -139,7 +142,7 @@ namespace T12
                         i++;
                     }
                     sql += str.Split(",")[str.Split(",").Length - 2] + "=@" + (str.Split(",").Length - 1);
-
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////
                     //Set parameter @3=str.ToArrayString()[3],@5=str.ToArrayString()[5]
                     cmd = new(sql, dbconnect.Cnn);
                     for (int i = 2; i < str.Split(",").Length; i++)
@@ -153,7 +156,7 @@ namespace T12
                     // No condition Query
                     cmd = new(sql, dbconnect.Cnn);
                 }
-
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
                 // Reader to list string
                 SqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
@@ -175,8 +178,8 @@ namespace T12
                 Console.Write("CANNOT QUERY!"); Console.ReadKey();
                 return new List<string>();
             }
-            
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
         }
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

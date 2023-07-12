@@ -41,6 +41,7 @@ namespace T12
             Console.WriteLine($"-------- Role: {userLogin.Role}");
             Console.WriteLine("------------------------------------------------");
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // LOGIN SCREEN        
         public void LoginScreen()
         {
@@ -62,6 +63,7 @@ namespace T12
             } while (userLogin.Role == Role.Unavailable);
             
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // MAIN SCREEN
         public void MainScreen()
         {
@@ -102,6 +104,7 @@ namespace T12
             } while (select != "1");
             Console.Write("-------------------- LOG OUT -------------------"); Console.ReadKey();
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // -- 2.CHANGE PASSWORD
         private void ChangePasswordScreen()
         {
@@ -111,7 +114,7 @@ namespace T12
             userServices.ChangeUserPassword(userLogin.Id, newpassword);
         }
 
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // -- 3.DEVICE MANAGER SCREEN
         public void DeviceManagerScreen()
         {
@@ -126,7 +129,7 @@ namespace T12
                 Console.WriteLine("1.LIST DEVICES");
                 Console.WriteLine("2.ADD NEW A DEVICE");
                 Console.WriteLine("3.UPDATE A DEVICE");
-                if (userLogin.Role == Role.Manager) Console.WriteLine("4, DELETE A USER");
+                if (userLogin.Role == Role.Manager) Console.WriteLine("4, DELETE A DEVICE");
                 Console.WriteLine("------------------------------------------------");
                 Console.Write("SELECT 0-");
                 if (userLogin.Role == Role.Manager) Console.WriteLine("4:");
@@ -154,6 +157,7 @@ namespace T12
             } while (select != "0");
 
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 3.1.LIST DEVICES
         private void ListDeviceScreen()
         {
@@ -165,28 +169,31 @@ namespace T12
             }
             Console.ReadLine();
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 3.2.ADD DEVICE
         private void AddNewDeviceScreen()
         {
             Header();
             Device item = new();
-            Console.WriteLine("ADD DEVICE USER: ");
+            Console.WriteLine("ADD DEVICE: ");
             Console.Write("ENTER DEVICE NAME:"); item.Name = Console.ReadLine() + "";
             Console.Write("ENTER QUANTITY:"); item.Quantity = Convert.ToInt32(Console.ReadLine());
             deviceServices.AddNew(item);
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 3.3.UPDATE DEVICE
         private void UpdateDeviceScreen()
         {
             Header();
             Device item = new();
-            Console.WriteLine("UPDATE INFO FOR USER:");
+            Console.WriteLine("UPDATE INFO FOR DEVICE:");
             Console.Write("ENTER ID:"); item.Id = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("SKIP FIELD BY JUST ENTER");
-            Console.Write("ENTER USER NAME:"); item.Name = Console.ReadLine() + "";
+            Console.Write("ENTER NAME:"); item.Name = Console.ReadLine() + "";
             Console.Write("ENTER QUANTITY:"); item.Quantity = Convert.ToInt32(Console.ReadLine());
             deviceServices.Update(item);
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 3.4.DELETE DEVICE (MANAGER ONLY)
         private void DeleteDeviceScreen()
         {
@@ -197,7 +204,7 @@ namespace T12
             userServices.Delete(item);
         }
 
-        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // -- 4.USER MANAGER SCREEN (MANAGER ONLY)
         public void UserManagerScreen()
         {
@@ -242,6 +249,7 @@ namespace T12
             } while (select != "0");
 
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 4.1.LIST USERS (MANAGER ONLY)
         private void ListUserScreen()
         {
@@ -253,6 +261,7 @@ namespace T12
             }
             Console.ReadLine();
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 4.2.SEARCH USERS (MANAGER ONLY)
         private void SearchUserScreen()
         {
@@ -266,6 +275,7 @@ namespace T12
             }
             Console.ReadKey();
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 4.3.ADD USER (MANAGER ONLY)
         private void AddNewUserScreen()
         {
@@ -278,6 +288,7 @@ namespace T12
             Console.Write("ENTER ROLE:"); user.Role = (Role)Convert.ToInt32(Console.ReadLine() + "");
             userServices.AddNew(user);
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 4.4.UPDATE USER (MANAGER ONLY)
         private void UpdateUserScreen()
         {
@@ -292,6 +303,7 @@ namespace T12
             Console.Write("ENTER ROLE:"); user.Role = (Role)Convert.ToInt32(Console.ReadLine() + "");
             userServices.Update(user);
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // ------ 4.5.DELETE USER (MANAGER ONLY)
         private void DeleteUserScreen()
         {
@@ -300,6 +312,7 @@ namespace T12
             Console.WriteLine("DELETE USER:");
             Console.Write("ENTER ID:"); user.Id = Convert.ToInt32(Console.ReadLine());            
             userServices.Delete(user);
-        }    
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

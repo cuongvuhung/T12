@@ -11,11 +11,11 @@ namespace T12
     internal class UserServices
     {
         private List<User> users = new ();
-        //public User UserLogin = new User();
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // Get data form database
         public void GetData()
         {
-            DLA dla = new ();
+            DAL dla = new ();
             string str = "Select,USERS";
             List<string> rows = dla.SQLQuery(str);
 
@@ -32,6 +32,8 @@ namespace T12
                 users.Add(item);
             }
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // Check user login
         public User CheckUser(string username, string password)
         {
             password = Utils.Hash(password);            
@@ -42,7 +44,7 @@ namespace T12
             };
             string str = "Select,USERS,username," + username + ",password," + password;
             //Console.WriteLine(str);
-            DLA dla = new();
+            DAL dla = new();
             List<string> rows = dla.SQLQuery(str);
             foreach (string row in rows) 
             {
@@ -53,6 +55,8 @@ namespace T12
             }
             return item;
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // Add new user
         public int AddNew(User user)
         {
             user.Password = Utils.Hash(user.Password);
@@ -61,9 +65,11 @@ namespace T12
             str += user.FullName + ',';
             str += user.Password + ',';
             str += Convert.ToInt32(user.Role);
-            DLA dla = new();
+            DAL dla = new();
             return dla.SQLExecute(str);
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // Update user
         public int Update(User user)
         {
             user.Password = Utils.Hash(user.Password);
@@ -73,24 +79,30 @@ namespace T12
             if (user.FullName != "") { str += "fullname," + user.FullName + ','; }
             if (user.Password != "") { str += "password," + user.Password + ','; }
             if (user.Role != Role.Unavailable) { str += "Role," + (Convert.ToInt32(user.Role)); }
-            DLA dla = new();
+            DAL dla = new();
             return dla.SQLExecute(str);
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // Delete user
         public int Delete(User user)
         {
             string str = "Delete,USERS,Id,";
             str += user.Id;                        
-            DLA dla = new();
+            DAL dla = new();
             return dla.SQLExecute(str);
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // List a sort list of user
         public List<User> SortedUserList() 
         {            
             return users.OrderByDescending(x => x.FullName).ToList();
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // Search a list of user
         public List<User> SearchListByName(string name) 
         {
             string str = "Select,USERS,Username," + name;
-            DLA dla = new();
+            DAL dla = new();
             List<User> result = new();
             List<String> rows = dla.SQLQuery(str);
             foreach (String row in rows)
@@ -107,11 +119,15 @@ namespace T12
             }
             return result;
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // Change password for user
         public void ChangeUserPassword(int id,string newpwd)
-        {            
+        {
+            newpwd = Utils.Hash(newpwd);
             string str = "Update,USERS," + id + ",password," + newpwd;
-            DLA dla = new();
+            DAL dla = new();
             dla.SQLExecute(str);
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }
