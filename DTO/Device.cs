@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace T12
+namespace T12.DTO
 {
     internal class Device
     {
@@ -13,9 +13,9 @@ namespace T12
         public int Quantity { get; set; }
         public Device()
         {
-            this.Id = 0;
-            this.Name = "";
-            this.Quantity = 0;
+            Id = 0;
+            Name = "";
+            Quantity = 0;
         }
         public Device(int Id, string Name, int Quantity)
         {

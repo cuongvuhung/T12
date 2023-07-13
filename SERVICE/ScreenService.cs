@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using T12.DTO;
+using T12.Ult_Ext;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOGIN SCREEN
 // MAIN SCREEN
@@ -24,13 +26,13 @@ using System.Threading.Tasks;
 // ------ 4.5.DELETE USER (MANAGER ONLY)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace T12
+namespace T12.SERVICE
 {
     internal class ScreenService
     {
         private User userLogin = new();
-        private UserServices userServices = new(); 
-        private DeviceServices deviceServices = new(); 
+        private UserServices userServices = new();
+        private DeviceServices deviceServices = new();
 
         public void Header()
         {
@@ -45,23 +47,23 @@ namespace T12
         // LOGIN SCREEN        
         public void LoginScreen()
         {
-            do 
+            do
             {
                 Header();
                 Console.WriteLine("-------------------- LOGIN ---------------------");
                 Console.Write("USERNAME:"); userLogin.UserName = Console.ReadLine() + "";
-                Console.Write("PASSWORD:"); userLogin.Password = Console.ReadLine() + "";                
+                Console.Write("PASSWORD:"); userLogin.Password = Console.ReadLine() + "";
                 userLogin = userServices.CheckUser(userLogin.UserName, userLogin.Password);
-                if (userLogin.Role != Role.Unavailable) 
-                {                     
-                    MainScreen(); 
-                } 
-                else 
+                if (userLogin.Role != Role.Unavailable)
                 {
-                    Console.Write("Login fail!");Console.ReadKey();
+                    MainScreen();
+                }
+                else
+                {
+                    Console.Write("Login fail!"); Console.ReadKey();
                 }
             } while (userLogin.Role == Role.Unavailable);
-            
+
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         // MAIN SCREEN
@@ -83,7 +85,7 @@ namespace T12
                 select = Console.ReadLine() + "";
                 switch (select)
                 {
-                    case "0": 
+                    case "0":
                         select = "1";
                         break;
                     case "1":
@@ -97,7 +99,7 @@ namespace T12
                         break;
                     case "4":
                         if (userLogin.Role == Role.Manager) UserManagerScreen();
-                        break;                    
+                        break;
                     default:
                         break;
                 }
@@ -110,7 +112,7 @@ namespace T12
         {
             Header();
             Console.WriteLine("ENTER NEW PASSWORD:");
-            string newpassword  = Console.ReadLine() + "";
+            string newpassword = Console.ReadLine() + "";
             userServices.ChangeUserPassword(userLogin.Id, newpassword);
         }
 
@@ -120,7 +122,7 @@ namespace T12
         {
             string select;
             do
-            {                
+            {
                 deviceServices = new DeviceServices();
                 deviceServices.GetData();
                 Header();
@@ -308,9 +310,9 @@ namespace T12
         private void DeleteUserScreen()
         {
             Header();
-            User user = new ();
+            User user = new();
             Console.WriteLine("DELETE USER:");
-            Console.Write("ENTER ID:"); user.Id = Convert.ToInt32(Console.ReadLine());            
+            Console.Write("ENTER ID:"); user.Id = Convert.ToInt32(Console.ReadLine());
             userServices.Delete(user);
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////

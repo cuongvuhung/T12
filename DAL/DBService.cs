@@ -22,9 +22,9 @@ using Microsoft.VisualBasic.FileIO;
 //                  = Select * from tblname where field1 = value 1 and field2 = value 2
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace T12
+namespace T12.DAL
 {
-    internal class DAL
+    internal class DBService
     {
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         // Excute SQLExecute
@@ -45,7 +45,7 @@ namespace T12
                     {
                         // + (@0,@1,....
                         sql += "@" + i + ",";
-                    } 
+                    }
                     // + @n)
                     sql += "@" + (str.Split(",").Length - 1) + ")";
 
@@ -64,14 +64,14 @@ namespace T12
                     sql = $"Update {str.Split(",")[1]} Set ";
 
                     // + field3 = @4, field5= @6,..... 
-                    
+
                     for (int i = 3; i < str.Split(",").Length - 3; i++)
                     {
                         sql += str.Split(",")[i] + "=@" + (i + 1) + ",";
                         i++;
                     }
                     // + fieldn = @n where id =@id
-                    sql += (str.Split(",")[str.Split(",").Length - 2]) + "=@" + (str.Split(",").Length - 1);
+                    sql += str.Split(",")[str.Split(",").Length - 2] + "=@" + (str.Split(",").Length - 1);
                     sql += " where id = @id";
 
                     // Set parameter @5 = str.ToArrayString()[5] ........ @id=str.ToArrayString()[2]
@@ -95,7 +95,7 @@ namespace T12
                         sql += str.Split(",")[i] + "=@" + (i + 1) + "and";
                         i++;
                     }
-                    sql += (str.Split(",")[str.Split(",").Length - 2]) + "=@" + (str.Split(",").Length - 1);
+                    sql += str.Split(",")[str.Split(",").Length - 2] + "=@" + (str.Split(",").Length - 1);
                     // Set parameter @0=str.ToArrayString()[2],@2=str.ToArrayString()[4]
                     cmd = new(sql, dbconnect.Cnn);
                     for (int i = 2; i < str.Split(",").Length; i++)
@@ -107,7 +107,7 @@ namespace T12
                 }
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
                 int result = cmd.ExecuteNonQuery();
-                Console.Write("Execute successful! -- "+ result + " completed!"); Console.ReadLine();
+                Console.Write("Execute successful! -- " + result + " completed!"); Console.ReadLine();
                 return result;
             }
             catch
@@ -115,7 +115,7 @@ namespace T12
                 Console.WriteLine("Cannot execute!"); Console.ReadKey();
                 return 0;
             }
-            
+
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         // Excute SQLQuery
@@ -162,18 +162,18 @@ namespace T12
                 while (rdr.Read())
                 {
                     string line = "";
-                    for (int j = 0; j < rdr.FieldCount; j++) 
+                    for (int j = 0; j < rdr.FieldCount; j++)
                     {
                         line += rdr[j].ToString().Trim() + ",";
                     }
                     result.Add(line);
                 }
-                
+
                 rdr.Close();
                 //Console.Write("Query successful! -- " + result.Count + " found!"); Console.ReadLine();
                 return result;
             }
-            catch 
+            catch
             {
                 Console.Write("CANNOT QUERY!"); Console.ReadKey();
                 return new List<string>();

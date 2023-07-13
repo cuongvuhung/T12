@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using T12.Ult_Ext;
 
-namespace T12
+namespace T12.DTO
 {
     internal class User
     {
@@ -15,11 +16,11 @@ namespace T12
         public Role Role { get; set; }
         public User()
         {
-            this.Id = 0;
-            this.UserName = "No username";
-            this.FullName = "No name";
-            this.Password = "";
-            this.Role = Role.Unavailable;
+            Id = 0;
+            UserName = "No username";
+            FullName = "No name";
+            Password = "";
+            Role = Role.Unavailable;
         }
         public User(int Id, string UserName, string FullName, string Password, Role Role)
         {
@@ -31,7 +32,7 @@ namespace T12
         }
         public override string ToString()
         {
-            return Id + "," + UserName + "," + FullName + "," + Role ;
+            return Id + "," + UserName + "," + FullName + "," + Role;
         }
     }
 }

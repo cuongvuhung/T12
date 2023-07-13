@@ -5,6 +5,9 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using T12.DAL;
+using T12.DTO;
+using T12.Ult_Ext;
 
 namespace T12
 {
@@ -15,7 +18,7 @@ namespace T12
         // Get data form database
         public void GetData()
         {
-            DAL dla = new ();
+            DBService dla = new ();
             string str = "Select,USERS";
             List<string> rows = dla.SQLQuery(str);
 
@@ -44,7 +47,7 @@ namespace T12
             };
             string str = "Select,USERS,username," + username + ",password," + password;
             //Console.WriteLine(str);
-            DAL dla = new();
+            DBService dla = new();
             List<string> rows = dla.SQLQuery(str);
             foreach (string row in rows) 
             {
@@ -65,7 +68,7 @@ namespace T12
             str += user.FullName + ',';
             str += user.Password + ',';
             str += Convert.ToInt32(user.Role);
-            DAL dla = new();
+            DBService dla = new();
             return dla.SQLExecute(str);
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +82,7 @@ namespace T12
             if (user.FullName != "") { str += "fullname," + user.FullName + ','; }
             if (user.Password != "") { str += "password," + user.Password + ','; }
             if (user.Role != Role.Unavailable) { str += "Role," + (Convert.ToInt32(user.Role)); }
-            DAL dla = new();
+            DBService dla = new();
             return dla.SQLExecute(str);
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +91,7 @@ namespace T12
         {
             string str = "Delete,USERS,Id,";
             str += user.Id;                        
-            DAL dla = new();
+            DBService dla = new();
             return dla.SQLExecute(str);
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +105,7 @@ namespace T12
         public List<User> SearchListByName(string name) 
         {
             string str = "Select,USERS,Username," + name;
-            DAL dla = new();
+            DBService dla = new();
             List<User> result = new();
             List<String> rows = dla.SQLQuery(str);
             foreach (String row in rows)
@@ -125,7 +128,7 @@ namespace T12
         {
             newpwd = Utils.Hash(newpwd);
             string str = "Update,USERS," + id + ",password," + newpwd;
-            DAL dla = new();
+            DBService dla = new();
             dla.SQLExecute(str);
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////

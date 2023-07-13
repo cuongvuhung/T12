@@ -1,4 +1,6 @@
-﻿namespace T12
+﻿using T12.SERVICE;
+
+namespace T12
 {
     internal class Program
     {

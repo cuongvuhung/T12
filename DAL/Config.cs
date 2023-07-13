@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace T12
+namespace T12.DAL
 {
     public class Config
     {
         public string conStr;
         public Config()
-        {            
+        {
             FileStream fileStream = new("config.cfg", FileMode.OpenOrCreate);
             StreamReader streamReader = new(fileStream);
             string dataSource = streamReader.ReadLine() + "";

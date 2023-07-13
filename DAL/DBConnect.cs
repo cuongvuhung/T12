@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace T12
+namespace T12.DAL
 {
     internal class DBConnect
     {
@@ -13,17 +13,17 @@ namespace T12
         public SqlConnection Cnn = new();
         public DBConnect()
         {
-            try 
-            { 
+            try
+            {
                 Cnn = new SqlConnection(config.conStr);
                 Cnn.Open();
-            } 
-            catch 
+            }
+            catch
             {
                 Console.WriteLine("Cannot connect to database!");
                 Console.ReadKey();
             }
-            
-        }        
+
+        }
     }
 }
